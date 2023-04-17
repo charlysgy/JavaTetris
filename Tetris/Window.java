@@ -349,4 +349,13 @@ public class Window {
             }
         }
     }
+
+    /**
+     * Method that close the JFrame
+     * @param None
+     * @return void
+     */
+    public void kill(){
+        frame.dispose();
+    }
 }

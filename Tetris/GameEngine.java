@@ -6,6 +6,7 @@ public class GameEngine {
 
     private static int[] fullRows = new int[4];
     private static int[] usedPieces = new int[7];
+    private static Window winref;
 
     private static boolean checkForFullRow(Window winmain) {
         int index = 0;
@@ -56,6 +57,7 @@ public class GameEngine {
     public static boolean isGameOver(Window winmain){
         for (int i = 0; i < 16; i++) {
             if (winmain.gameField[i][0] != null && winmain.gameField[i][0].isLocked) {
+                JOptionPane.showMessageDialog(null, "Game Over!");
                 return true;
             }
         }
@@ -83,6 +85,7 @@ public class GameEngine {
 
         Window winmain = new Window(playerName);
         
+        winref = winmain;
         winmain.current = new Piece(usedPieces);
         winmain.addPieceToGameField();
         winmain.drawGameField();
@@ -90,7 +93,7 @@ public class GameEngine {
         winmain.next = new Piece(usedPieces);
         winmain.drawNextPiece();
 
-        JOptionPane.showConfirmDialog(null, "Read the message int the top left corner then press H to start the game", "Start Game", 0);
+        JOptionPane.showMessageDialog(null, "Read the message in the top left corner then press H to start the game", "Start Game", JOptionPane.INFORMATION_MESSAGE);
 
 
         while(winmain.isAlive() && !isGameOver(winmain)){
@@ -110,11 +113,6 @@ public class GameEngine {
 
             // Automatic down movement
             if (!winmain.pause && System.currentTimeMillis() - lastSysTime >= delay) {
-                // Check if the game is over
-                if (isGameOver(winmain)) {
-                    JOptionPane.showMessageDialog(null, "Game Over!");
-                    break;
-                }
 
                 lastSysTime = System.currentTimeMillis();
                 
@@ -189,8 +187,15 @@ public class GameEngine {
     public static void main(String[] args) {
         int answer = 0;
         while (answer == 0) {
+            if (winref != null) {
+                winref.kill();
+            }
             runGame();
             answer = JOptionPane.showConfirmDialog(null, "Do you wanna play again ?", "PLay Again ?", 0);
         }
+        if (winref != null) {
+            winref.kill();
+        }
+        return;
     }
 }
